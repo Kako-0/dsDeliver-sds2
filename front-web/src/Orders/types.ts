@@ -16,6 +16,7 @@ type ProductId = {
     id: number;
 }
 
+// O "&" indica que OrderPayLoad também herda os atributos de OrderLocationData
 export type OrderPayLoad = {
     products: ProductId[];
 } & OrderLocationData;
