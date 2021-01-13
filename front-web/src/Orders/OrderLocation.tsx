@@ -4,11 +4,13 @@ import AsyncSelect from 'react-select/async';
 import { fetchLocalMapBox } from '../api';
 import { OrderLocationData } from './types';
 
+//Posição inicial no mapa
 const initialPosition = {
     lat: -2.5369191,
     lng: -44.2605489
 };
 
+//O "?" significa que é opcional atribuir um valor a um atributo
 type Place = {
     label?: string;
     value?: string;
@@ -28,6 +30,7 @@ const OrderLocation = ({onChangeLocation}: Props) => {
     });
 
     const loadOptions = async (inputValue: string, callback: (places: Place[]) => void) => {
+        //Puxa do mapa leaflet o resultado da pesquisa feita pelo inputValue
         const response = await fetchLocalMapBox(inputValue);
       
         const places = response.data.features.map((item: any) => {
@@ -45,6 +48,7 @@ const OrderLocation = ({onChangeLocation}: Props) => {
       };
       
       const handleChangeSelect = (place: Place) => {
+          //Configura uma nova posição para o mapa
         setAddress(place);
         onChangeLocation({
           latitude: place.position.lat,
@@ -60,13 +64,16 @@ const OrderLocation = ({onChangeLocation}: Props) => {
                     Selecione onde o pedido deve ser entregue:
                 </h3>
                 <div className="filter-container">
+                    {/*Biblioteca React Select para carregar opções conforme o usuário digita*/}
                     <AsyncSelect
                         placeholder="Digite um endereço para entregar o pedido"
                         className="filter"
+                        {/*Carrega as opções puxadas na biblioteca do LeafLet */}
                         loadOptions={loadOptions}
                         onChange={value => handleChangeSelect(value as Place)}
                     />
                 </div>
+                {/*Renderiza o mapa de acordo com o "address" fornecido ou, inicialmente, pelo "initialPosition" */}
                 <MapContainer center={address.position} zoom={13} scrollWheelZoom key={address.position.lat}>
                     <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
