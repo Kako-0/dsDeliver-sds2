@@ -41,13 +41,16 @@ const Orders = () => {
 
     const handleSubmit = () => {
         const productsIds = selectedProducts.map(({ id }) => ({ id }));
+        //Armazena o Id de um produto e a localização de que pediu
         const payload = {
           ...orderLocation!,
           products: productsIds
         }
       
+        //Envia o pedido para o backend
         saveOrder(payload).then((response) => {
           toast.error(`Pedido enviado com sucesso! Nº${response.data.id}`);
+          //Zera os pedidos
           setSelectedProducts([]);
         })
           .catch(() => {
